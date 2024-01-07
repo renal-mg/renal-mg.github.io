@@ -1,11 +1,236 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="en" manifest="offlinedatabase.manifest">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./build.css">
     <title>Document</title>
+    <script src="./bundle.min.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1406574058941176"
+     crossorigin="anonymous"></script>
+    
 </head>
-<body>
-    teste
+
+
+<body onload="leitura()" class="bg-indigo-100">
+
+    <div id="master">
+
+        <div>
+            
+            
+
+            <div id="btns-c" class="flex flex-wrap place-content-center mx-auto lg-min-h-screen rounded-lg bg-white overflow-hidden p-1 m-2 mt-0">
+                <button onclick="start_grid_patients()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">Histórico</button>
+                <button onclick="registrarPrescritor()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">Add Prescritor</button>
+                <!--button onclick="updateEstabelecimento()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">Atualizar Estabelecimento</button-->
+                <button id="btnSeletor" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="trocarDeDoencaOsseaParaAnemia()">Configurações para Anemia na IRC</button>
+                <button id="btnSeletor2" class="font-bold bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="trocarTelaDeAnemiaParaDoencaOssea()">Configurações para Doença OSSEA</button>
+                <button id="btntrocabtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="trocarSelectPorInput()"><b>Preenchimento manual</b></button>
+            </div>
+            
+            
+            <div id="inf-paciente" class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8 mb-3">
+                
+        
+                
+                <div id="inputPaciente">
+                    <div id="nomeee" class="relative inline-block w-full text-gray-700">
+                        <select onchange="findPaciente(this.value)" id="nomePaciente" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline" placeholder="Nome do paciente">
+                            <option value="">Selecione o paciente</option>
+                        </select>
+                        <div id="iconClass" class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                        </div>
+            
+                    </div> 
+                </div>
+                       
+        
+                <input id="nomeMae" type="text" placeholder="Nome da mãe" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
+                <input id="peso" type="text" placeholder="Peso" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
+                <input id="altura" type="text" placeholder="Altura" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
+                <input id="cpf" type="text" placeholder="CPF" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
+                <input id="telefone" type="text" placeholder="telefone" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
+            </div>
+        </div>
+        
+        
+        <div>
+            <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8 mb-3">
+                <h3 class="font-mono text-base md:text-lg">Medicamentos</h3>
+                <div id="medicamentos-lme" class="relative inline-block w-full text-gray-700">
+                    <select name="" id="medicamento" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
+                        <option class="itemAnemia" value="A2A">ALFAEPOETINA 2000UI - 12 Ampolas</option>
+                        <option class="itemAnemia" value="A2M">ALFAEPOETINA 2000UI - 8 Ampolas</option>
+                        <option class="itemAnemia" value="A3A">ALFAEPOETINA 3000UI - 12 Ampolas</option>
+                        <option class="itemAnemia" value="A3M">ALFAEPOETINA 3000UI - 8 Ampolas</option>
+                        <option class="itemAnemia" value="A4A">ALFAEPOETINA 4000UI - 12 Ampolas</option>
+                        <option class="itemAnemia" value="A4M">ALFAEPOETINA 4000UI - 8 Ampolas</option>
+                        <!--SACARATO DE HIDROXIDO FERRICO 100MG/ML (INJETAVEL)-->
+                        <option class="itemAnemia" value="SA">SACARATO DE HIDROXIDO FERRICO - Ataque</option>
+                        <option class="itemAnemia" value="SM">SACARATO DE HIDROXIDO FERRICO - Manutenção</option>
+                        <!--N25.0-->
+                        <option class="itemOsseo" value="C02530">CALCITRIOL 0,25MCG/ML - 30 CP</option>
+                        <option class="itemOsseo" value="C02560">CALCITRIOL 0,25MCG/ML - 60 CP</option>
+                        <option class="itemOsseo" value="CI30">CINACALCETE 30MG - 30 CP</option>
+                        <option class="itemOsseo" value="CI60">CINACALCETE 30MG - 60 CP</option>
+                        <option class="itemOsseo" value="PA12">PARICALCITOL 5 mcg/ml - 12 Ampolas</option>
+                        <option class="itemOsseo" value="SE90">SEVELAMER 800mg - 90 Comprimidos</option>
+                        <option class="itemOsseo" value="SE180">SEVELAMER 800mg - 180 Comprimidos</option>
+                        <option class="itemOsseo" value="SE270">SEVELAMER 800mg - 270 Comprimidos</option>
+                    </select>
+                    
+                
+                    <button class="absolute inset-y-0 right-0 flex items-center px-4 font-bold text-white bg-indigo-600 rounded-r-lg hover:bg-indigo-500 focus:bg-indigo-700" onclick="adicionarNaTabela()">Adicionar</button>
+            
+                </div>
+                
+            
+                <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8">
+                    <div>
+                        <table class="font-mono text-base md:text-lg">
+                            <th class="font-mono text-base md:text-lg pr-8">Medicamento</th>
+                            <th class="font-mono text-base md:text-lg pr-8">Dosagem</th>
+                            <th class="font-mono text-base md:text-lg"></th>
+                            <tbody id="tabela-medicamento">
+                            
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                </div>
+            
+                
+                </div>
+                <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8">
+            
+                        
+                        
+                        <label for="anaminese">Anamnese</label>
+                        <div class="relative inline-block w-full text-gray-700">
+                            
+                            <select onchange="javascript:configurarTipoDeTratamento(this.value)" name="" id="anamnese" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
+                                <option id="hd" value="hd">Paciente portador de IRC em programa hemodialitico convencional</option>
+                                <option id="capd" value="capd">Paciente portador de IRC em programa de Dialise Peritoneal Ambulatorial Continua (CAPD).</option>
+                                <option id="conservador" value="conservador">Paciente portador de IRC em tratamento conservador.</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                            </div>
+                        </div>
+            
+                        <label id="emUsoLabel" for="emUso">Realizou tratamento prévio ou esta em tratamento</label>
+                        <div class="relative inline-block w-full text-gray-700">
+                            <select onchange="javascript:pacienteEstaEmUso(this.value)" name="" id="emUso" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
+                                <option value="s">SIM - Em uso</option>
+                                <option value="n">NÃO</option>
+                                <option value="ns">Não sei</option>
+                            </select>
+                            <div id="emUsoSvg" class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                            </div>
+                        </div>
+                        
+                        <label for="medico">Responsável</label>
+                        <div class="relative inline-block w-full text-gray-700">
+                            
+                            <select onchange="javascript:configurarCNSdoMedico(this.value)" name="" id="medico" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
+        
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                            </div>
+                        </div>    
+                        
+                        <div hidden id="form-alfaepoetina">
+                            <label id="primeiroTratamentoALabel" for="primeiroTratamentoA">formulario Alfaepoetina</label>
+                            <div id="primeiroTratamentoAlfaepoetina" class="relative inline-block w-full text-gray-700">
+                                <select name="" id="primeiroTratamentoA" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
+                                    <option value="s">Primeiro tratamento com Alfaepoetina</option>
+                                    <option value="n">Não é o primeiro tratamento</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                                </div>
+                
+                            </div>
+                        </div>
+                        
+                        <div hidden id="form-sacarato">
+                            <label id="primeiroTratamentoSLabel" for="primeiroTratamentoS">formulario Sacarato</label>
+                            <div id="primeiroTratamentoSacarato" class="relative inline-block w-full text-gray-700">
+                                <select name="" id="primeiroTratamentoS" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
+                                    <option value="s">Primeiro tratamento com Sacarato</option>
+                                    <option value="n">Não é o primeiro tratamento</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <label id="estagioLabel" for="">Estágio da DRC</label>
+                        <div id="estagio" class="relative inline-block w-full text-gray-700" >
+                            <select name="" id="estagioDrc" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
+                                <option value="V">V</option>
+                                <option value="IV">IV</option>
+                                <option value="III">III</option>
+                                <option value="II">II</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+            
+                    
+                </div>
+                <br>
+
+                
+                <div id="btss" class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8">
+                    <button hidden id="anemiaCombinado" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onclick="anemiaCombinado()">Gerar Alfaepoetina + sacarato</button>
+                    <button hidden id="alfaepoetina" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onclick="alfaepoetina()">Gerar Alfaepoetina</button>
+                    <button hidden id="sacarato" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onclick="noripurum()">Gerar Sacarato</button>
+                    <button id="calcitriol025" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onclick="doencaOssea()">Gerar Doença Ossea</button>
+                    <!-- remover isso depois -> button id="calcitriol025" class="btn btn-dark" onclick="calcitriol025()">Gerar Calcitriol</button>
+                    <button id="cinacalcete30" class="btn btn-dark" onclick="cinacalcete30()">Gerar cinacalcete</button>
+                    <button id="paricalcitol" class="btn btn-dark" onclick="paricalcitol()">Gerar Paricalcitol</button>
+                    -->
+                </div>
+                <br>
+
+            </div>
+    
+        </div>
+
+
+    </div>
+    
+
+
+
+
+
+    
+
+    
 </body>
+
+<script>
+    esconderMedicamentosDoencaOssea();
+    esconderBotoesDaDoencaOssea();
+
+
+    var usuario = '--'
+
+    
+    
+
+</script>
+
+
 </html>

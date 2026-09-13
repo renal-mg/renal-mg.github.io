@@ -1,41 +1,89 @@
 ﻿<!DOCTYPE html>
-<html lang="en" manifest="offlinedatabase.manifest">
+<html lang="pt-BR" manifest="offlinedatabase.manifest">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./build.css">
-    <title>Medicamentos Excepcionais MG</title>
-    
+    <title>LME - Montagem de laudos</title>
+
     <script src="./bundle.min.js"></script>
-    <script src="./pdfmake0.2.min.js"></script>
-    <script src="./vfs_fonts.js"></script>
-    
-    
+
+
 </head>
 
 
-<body onload="leitura()" class="bg-indigo-100">
+<body class="app-shell">
+
+    <!-- Modal backdrop -->
+    <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+    <!-- Modal container -->
+    <div id="modal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+      <div
+        class="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-11/12 max-w-5xl max-h-[90vh] overflow-y-auto p-6"
+        id="modalContent"
+      ></div>
+    </div>
+
 
     <div id="master">
 
+        <header class="app-header">
+            <div>
+                <p class="app-kicker">CEAF · Minas Gerais</p>
+                <h1>Montagem de LME</h1>
+                <p class="app-subtitle">Preencha os dados do paciente e gere os documentos necessários.</p>
+            </div>
+            <div class="app-status" aria-label="Status da aplicação">
+                <span class="app-status-dot"></span>
+                <span>Pronto para preencher</span>
+            </div>
+        </header>
+
         <div>
-            
-            
+
+
 
             <div id="btns-c" class="flex flex-wrap place-content-center mx-auto lg-min-h-screen rounded-lg bg-white overflow-hidden p-1 m-2 mt-0">
                 <button onclick="start_grid_patients()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">Histórico</button>
-                <button onclick="registrarPrescritor()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">Add Prescritor</button>
+                <!--button onclick="registrarPrescritor()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">Add Prescritor</button-->
                 <!--button onclick="updateEstabelecimento()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">Atualizar Estabelecimento</button-->
+                <button id="btnTipoReceita" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="alternarTipoReceita()">Inicial</button>
                 <button id="btnSeletor" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="trocarDeDoencaOsseaParaAnemia()">Configurações para Anemia na IRC</button>
                 <button id="btnSeletor2" class="font-bold bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="trocarTelaDeAnemiaParaDoencaOssea()">Configurações para Doença OSSEA</button>
                 <button id="btntrocabtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="trocarSelectPorInput()"><b>Preenchimento manual</b></button>
+                <button
+                  title="Recarregar formulário"
+                  onclick="reloadFormularioSemRefresh()"
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded flex items-center justify-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4 4v6h6M20 20v-6h-6M5 19a9 9 0 0014-7 9 9 0 00-14-7"
+                    />
+                  </svg>
+                </button>
+
+
+
+
+
             </div>
-            
-            
+
+
             <div id="inf-paciente" class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8 mb-3">
-                
-        
-                
+
+
+
                 <div id="inputPaciente">
                     <div id="nomeee" class="relative inline-block w-full text-gray-700">
                         <select onchange="findPaciente(this.value)" id="nomePaciente" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline" placeholder="Nome do paciente">
@@ -44,31 +92,51 @@
                         <div id="iconClass" class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                             <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
                         </div>
-            
-                    </div> 
+
+                    </div>
                 </div>
-                       
-        
+
+
                 <input id="nomeMae" type="text" placeholder="Nome da mãe" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
-                <input id="peso" type="text" placeholder="Peso" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
-                <input id="altura" type="text" placeholder="Altura" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
-                <input id="cpf" type="text" placeholder="CPF" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
-                <input id="telefone" type="text" placeholder="telefone" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
+                <input id="peso" type="number" placeholder="Peso" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
+                <input id="altura" type="number" placeholder="Altura" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
+                <input 
+                    id="cpf" 
+                    type="text" 
+                    inputmode="numeric" 
+                    pattern="[0-9]*" 
+                    placeholder="CPF" 
+                    class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11)"
+                    >
+                <input id="telefone" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="telefone" class="max-w-md h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline">
             </div>
         </div>
-        
-        
+
+
         <div>
-            <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8 mb-3">
+            <div id="medicamentos-section" class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8 mb-3">
+                <p class="section-kicker">Etapa 2</p>
                 <h3 class="font-mono text-base md:text-lg">Medicamentos</h3>
                 <div id="medicamentos-lme" class="relative inline-block w-full text-gray-700">
                     <select name="" id="medicamento" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
                         <option class="itemAnemia" value="A2A">ALFAEPOETINA 2000UI - 12 Ampolas</option>
                         <option class="itemAnemia" value="A2M">ALFAEPOETINA 2000UI - 8 Ampolas</option>
+                        <option class="itemAnemia" value="A2M2">ALFAEPOETINA 2000UI - 4 Ampolas</option>
+
                         <option class="itemAnemia" value="A3A">ALFAEPOETINA 3000UI - 12 Ampolas</option>
                         <option class="itemAnemia" value="A3M">ALFAEPOETINA 3000UI - 8 Ampolas</option>
+                        <option class="itemAnemia" value="A3M2">ALFAEPOETINA 3000UI - 4 Ampolas</option>
+
                         <option class="itemAnemia" value="A4A">ALFAEPOETINA 4000UI - 12 Ampolas</option>
                         <option class="itemAnemia" value="A4M">ALFAEPOETINA 4000UI - 8 Ampolas</option>
+                        <option class="itemAnemia" value="A4M2">ALFAEPOETINA 4000UI - 4 Ampolas</option>
+
+                        <option class="itemAnemia" value="A10A">ALFAEPOETINA 10000UI - 12 Ampolas</option>
+                        <option class="itemAnemia" value="A10M">ALFAEPOETINA 10000UI - 8 Ampolas</option>
+                        <option class="itemAnemia" value="A10M2">ALFAEPOETINA 10000UI - 4 Ampolas</option>
+
+
                         <!--SACARATO DE HIDROXIDO FERRICO 100MG/ML (INJETAVEL)-->
                         <option class="itemAnemia" value="SA">SACARATO DE HIDROXIDO FERRICO - Ataque</option>
                         <option class="itemAnemia" value="SM">SACARATO DE HIDROXIDO FERRICO - Manutenção</option>
@@ -78,40 +146,43 @@
                         <option class="itemOsseo" value="CI30">CINACALCETE 30MG - 30 CP</option>
                         <option class="itemOsseo" value="CI60">CINACALCETE 30MG - 60 CP</option>
                         <option class="itemOsseo" value="PA12">PARICALCITOL 5 mcg/ml - 12 Ampolas</option>
+                        <option class="itemOsseo" value="PA8">PARICALCITOL 5 mcg/ml - 8 Ampolas</option>
                         <option class="itemOsseo" value="SE90">SEVELAMER 800mg - 90 Comprimidos</option>
                         <option class="itemOsseo" value="SE180">SEVELAMER 800mg - 180 Comprimidos</option>
                         <option class="itemOsseo" value="SE270">SEVELAMER 800mg - 270 Comprimidos</option>
                     </select>
-                    
-                
+
+
                     <button class="absolute inset-y-0 right-0 flex items-center px-4 font-bold text-white bg-indigo-600 rounded-r-lg hover:bg-indigo-500 focus:bg-indigo-700" onclick="adicionarNaTabela()">Adicionar</button>
-            
+
                 </div>
-                
-            
-                <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8">
+
+
+                <div class="medication-table">
                     <div>
                         <table class="font-mono text-base md:text-lg">
                             <th class="font-mono text-base md:text-lg pr-8">Medicamento</th>
                             <th class="font-mono text-base md:text-lg pr-8">Dosagem</th>
                             <th class="font-mono text-base md:text-lg"></th>
                             <tbody id="tabela-medicamento">
-                            
+
                             </tbody>
-                            
+
                         </table>
                     </div>
                 </div>
-            
-                
+
+
                 </div>
-                <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8">
-            
-                        
-                        
+                <div id="clinical-section" class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8">
+
+
+
+                        <p class="section-kicker">Etapa 3</p>
+                        <h3 class="section-title">Dados clínicos</h3>
                         <label for="anaminese">Anamnese</label>
                         <div class="relative inline-block w-full text-gray-700">
-                            
+
                             <select onchange="javascript:configurarTipoDeTratamento(this.value)" name="" id="anamnese" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
                                 <option id="hd" value="hd">Paciente portador de IRC em programa hemodialítico convencional</option>
                                 <option id="capd" value="capd">Paciente portador de IRC em programa de Diálise Peritoneal Ambulatorial Contínua (CAPD).</option>
@@ -121,7 +192,7 @@
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
                             </div>
                         </div>
-            
+
                         <label id="emUsoLabel" for="emUso">Realizou tratamento prévio ou esta em tratamento</label>
                         <div class="relative inline-block w-full text-gray-700">
                             <select onchange="javascript:pacienteEstaEmUso(this.value)" name="" id="emUso" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
@@ -133,18 +204,18 @@
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
                             </div>
                         </div>
-                        
+
                         <label for="medico">Responsável</label>
                         <div class="relative inline-block w-full text-gray-700">
-                            
+
                             <select onchange="javascript:configurarCNSdoMedico(this.value)" name="" id="medico" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
-        
+
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
                             </div>
-                        </div>    
-                        
+                        </div>
+
                         <div hidden id="form-alfaepoetina">
                             <label id="primeiroTratamentoALabel" for="primeiroTratamentoA">formulario Alfaepoetina</label>
                             <div id="primeiroTratamentoAlfaepoetina" class="relative inline-block w-full text-gray-700">
@@ -155,10 +226,10 @@
                                 <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                                     <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
                                 </div>
-                
+
                             </div>
                         </div>
-                        
+
                         <div hidden id="form-sacarato">
                             <label id="primeiroTratamentoSLabel" for="primeiroTratamentoS">formulario Sacarato</label>
                             <div id="primeiroTratamentoSacarato" class="relative inline-block w-full text-gray-700">
@@ -171,8 +242,8 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        
+
+
                         <label id="estagioLabel" for="">Estágio da DRC</label>
                         <div id="estagio" class="relative inline-block w-full text-gray-700" >
                             <select name="" id="estagioDrc" class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline">
@@ -186,12 +257,12 @@
                             </div>
                         </div>
                     </div>
-            
-                    
+
+
                 </div>
                 <br>
 
-                
+
                 <div id="btss" class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8">
                     <button hidden id="anemiaCombinado" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onclick="anemiaCombinado()">Gerar Alfaepoetina + sacarato</button>
                     <button hidden id="alfaepoetina" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onclick="alfaepoetina()">Gerar Alfaepoetina</button>
@@ -205,26 +276,53 @@
                 <br>
 
             </div>
-    
+
         </div>
 
 
     </div>
-    
 
 
 
 
 
-    
 
-    
+
+
+
 </body>
+<script defer>leitura()</script>
 
 <script>
     esconderMedicamentosDoencaOssea();
     esconderBotoesDaDoencaOssea();
-    
+
+
+    function openModal(html) {
+      document.getElementById("modalContent").innerHTML = html;
+      document.getElementById("modal").classList.remove("hidden");
+      document.getElementById("modalOverlay").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("modalContent").innerHTML = "";
+      document.getElementById("modal").classList.add("hidden");
+      document.getElementById("modalOverlay").classList.add("hidden");
+    }
+
+    document.getElementById("modalOverlay").onclick = closeModal;
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeModal();
+    });
+
+
+    //clone do DOM
+    let originalMasterHTML = null;
+    document.addEventListener("DOMContentLoaded", () => {
+      originalMasterHTML = document.getElementById("master").innerHTML;
+    });
+
 
 </script>
 

@@ -30,9 +30,9 @@
 
         <header class="app-header">
             <div>
-                <p class="app-kicker">-</p>
+                <p class="app-kicker">Minas Gerais</p>
                 <h1>Montagem de LME</h1>
-                <p class="app-subtitle">Preencha os dados do paciente e gere os documentos necessários para requisição de medicamentos pelo estado de MG.</p>
+                <p class="app-subtitle">Preencha os dados do paciente e gere os documentos necessários.</p>
             </div>
             <div class="app-status" aria-label="Status da aplicação">
                 <span class="app-status-dot"></span>
@@ -46,9 +46,9 @@
 
             <div id="btns-c" class="flex flex-wrap place-content-center mx-auto lg-min-h-screen rounded-lg bg-white overflow-hidden p-1 m-2 mt-0">
                 <button onclick="start_grid_patients()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">Histórico</button>
+                <button onclick="start_renewal_queue()" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 m-2 rounded">Renovações</button>
                 <!--button onclick="registrarPrescritor()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">Add Prescritor</button-->
                 <!--button onclick="updateEstabelecimento()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">Atualizar Estabelecimento</button-->
-                <button id="btnTipoReceita" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="alternarTipoReceita()">Inicial</button>
                 <button id="btnSeletor" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="trocarDeDoencaOsseaParaAnemia()">Configurações para Anemia na IRC</button>
                 <button id="btnSeletor2" class="font-bold bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="trocarTelaDeAnemiaParaDoencaOssea()">Configurações para Doença OSSEA</button>
                 <button id="btntrocabtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded" onclick="trocarSelectPorInput()"><b>Preenchimento manual</b></button>
@@ -82,6 +82,10 @@
 
             <div id="inf-paciente" class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-3xl p-8 mb-3">
 
+                <div class="mb-4">
+                    <p class="section-kicker">Etapa 1</p>
+                    <button id="btnTipoReceita" title="Clique para alternar entre LME inicial e renovação" aria-label="Tipo do LME: Inicial. Clique para alterar." class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-2 rounded" onclick="alternarTipoReceita()">Tipo do LME: Inicial</button>
+                </div>
 
 
                 <div id="inputPaciente">
@@ -306,6 +310,7 @@
 
     function closeModal() {
       document.getElementById("modalContent").innerHTML = "";
+      document.getElementById("modalContent").classList.replace("max-w-7xl", "max-w-5xl");
       document.getElementById("modal").classList.add("hidden");
       document.getElementById("modalOverlay").classList.add("hidden");
     }
